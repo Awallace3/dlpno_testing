@@ -49,18 +49,22 @@ def create_s22_table() -> None:
         "ZB": "array",
         "charges": "array",
         "dlpno_ccsd_adz": "array",
+        "dlpno_ccsd_adz_orca_loosePNO": "array",
+        "dlpno_ccsd_adz_orca_normalPNO": "array",
+        "dlpno_ccsd_adz_orca_tightPNO": "array",
     }
     db_path = "db/dlpno.db"
     table_name = "s22"
     table_exists = hrcl_jobs.sqlt.new_table(db_path, table_name, table_cols)
+    con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
     if table_exists:
         data = read_s22()
-        con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
         insertion = ["DB", "sys_ind", "RA", "ZA", "RB", "ZB", "charges"]
         for r in zip(*read_s22()):
             print(r)
             hrcl_jobs.sqlt.insert_new_row(cur, con, table_name, insertion, r)
     else:
+        hrcl_jobs.sqlt.table_add_columns(con, table_name, table_cols)
         print("Skipping Insertions...")
     return
 
@@ -73,35 +77,39 @@ def main():
     table_name = "s22"
     create_s22_table()
     con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
-    id_list = hrcl_jobs.sqlt.query_columns_for_values(
-        # cur, table_name, id_names=["id"], matches={"DB": ["s22"]}
-        cur, table_name, id_names=["id"], matches={"dlpno_ccsd_adz": ["NULL"]}
-    )
-    print(id_list)
-    # id_list = [1]
-    TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3
-    ms_sl(
-        id_list=id_list,
-        db_path=db_path,
-        run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
-        headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
-        js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
-        ppm="4gb",
-        table=table_name,
-        id_label="id",
-        # level_theory=["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF"],
-        level_theory=[
-            [
-                "DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF",
-                TCutPNO,
-                TCutPairs,
-                TCutMKN,
-            ]
-        ],
-        output_columns=[
-            "dlpno_ccsd_adz",
-        ],
-    )
+    TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3  # Andy's params
+    PNO_params = {
+        # [TCutPNO, TCutPairs, TCutMKN]
+        "andy": [1e-8, 1e-5, 1e-3],
+        "_orca_loosePNO": [1e-6, 1e-3, 1e-3],
+        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3],
+        "_orca_tightPNO": [1e-7, 1e-5, 1e-4],
+    }
+    for k, v in PNO_params.items():
+        lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
+        output_col = "dlpno_ccsd_adz"
+        if k != "andy":
+            output_col += k
+        id_list = hrcl_jobs.sqlt.query_columns_for_values(
+            # cur, table_name, id_names=["id"], matches={"DB": ["s22"]}
+            cur,
+            table_name,
+            id_names=["id"],
+            matches={output_col: ["NULL"]},
+        )
+        print(id_list)
+        ms_sl(
+            id_list=id_list,
+            db_path=db_path,
+            run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
+            headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
+            js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
+            ppm="4gb",
+            table=table_name,
+            id_label="id",
+            level_theory=[lt],
+            output_columns=[output_col],
+        )
     return
 
 
