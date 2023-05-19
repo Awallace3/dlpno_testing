@@ -74,7 +74,8 @@ def main():
     create_s22_table()
     con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
     id_list = hrcl_jobs.sqlt.query_columns_for_values(
-        cur, table_name, id_names=["id"], matches={"DB": ["s22"]}
+        # cur, table_name, id_names=["id"], matches={"DB": ["s22"]}
+        cur, table_name, id_names=["id"], matches={"dlpno_ccsd_adz": ["NULL"]}
     )
     print(id_list)
     # id_list = [1]
