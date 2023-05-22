@@ -87,6 +87,7 @@ def main():
     }
 
     hrcl_jobs.sqlt.table_to_df_csv(db_path, table_name, "s22.csv")
+    hrcl_jobs.sqlt.table_to_df_pkl(db_path, table_name, "s22.pkl")
     return
     for k, v in PNO_params.items():
         lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
