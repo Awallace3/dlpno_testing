@@ -85,6 +85,9 @@ def main():
         "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3],
         "_orca_tightPNO": [1e-7, 1e-5, 1e-4],
     }
+
+    hrcl_jobs.sqlt.table_to_df_csv(db_path, table_name, "s22.csv")
+    return
     for k, v in PNO_params.items():
         lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
         output_col = "dlpno_ccsd_adz"
@@ -97,7 +100,11 @@ def main():
             id_names=["id"],
             matches={output_col: ["NULL"]},
         )
+        # id_list = [i for i in id_list if i != 19]
         print(id_list)
+        if len(id_list) == 0:
+            print("No jobs to run")
+            continue
         ms_sl(
             id_list=id_list,
             db_path=db_path,
