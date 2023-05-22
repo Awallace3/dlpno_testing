@@ -52,6 +52,10 @@ def create_s22_table() -> None:
         "dlpno_ccsd_adz_orca_loosePNO": "array",
         "dlpno_ccsd_adz_orca_normalPNO": "array",
         "dlpno_ccsd_adz_orca_tightPNO": "array",
+        "dlpno_ccsd_adz_CP": "array",
+        "dlpno_ccsd_adz_orca_loosePNO_CP": "array",
+        "dlpno_ccsd_adz_orca_normalPNO_CP": "array",
+        "dlpno_ccsd_adz_orca_tightPNO_CP": "array",
     }
     db_path = "db/dlpno.db"
     table_name = "s22"
@@ -86,11 +90,11 @@ def main():
         "_orca_tightPNO": [1e-7, 1e-5, 1e-4],
     }
 
-    hrcl_jobs.sqlt.table_to_df_csv(db_path, table_name, "s22.csv")
-    hrcl_jobs.sqlt.table_to_df_pkl(db_path, table_name, "s22.pkl")
-    return
+    # hrcl_jobs.sqlt.table_to_df_csv(db_path, table_name, "s22.csv")
+    # hrcl_jobs.sqlt.table_to_df_pkl(db_path, table_name, "s22.pkl")
     for k, v in PNO_params.items():
-        lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
+        # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
+        lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
         output_col = "dlpno_ccsd_adz"
         if k != "andy":
             output_col += k
@@ -106,7 +110,7 @@ def main():
         if len(id_list) == 0:
             print("No jobs to run")
             continue
-        ms_sl(
+        hrcl_jobs.parallel.ms_sl_extra_info(
             id_list=id_list,
             db_path=db_path,
             run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
@@ -115,7 +119,20 @@ def main():
             ppm="4gb",
             table=table_name,
             id_label="id",
-            level_theory=[lt],
+            output_columns=[output_col],
+            extra_info=[lt],
+        )
+        output_col += "_CP"
+        hrcl_jobs.parallel.ms_sl_extra_info(
+            id_list=id_list,
+            db_path=db_path,
+            run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie_CP,
+            headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
+            js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
+            ppm="4gb",
+            table=table_name,
+            id_label="id",
+            extra_info=[lt],
             output_columns=[output_col],
         )
     return
