@@ -107,34 +107,45 @@ def main():
         print(id_list)
         if len(id_list) == 0:
             print("No jobs to run")
-            continue
-        print(f"Starting jobs for {output_col}")
-        hrcl_jobs.parallel.ms_sl_extra_info(
-            id_list=id_list,
-            db_path=db_path,
-            run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
-            headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
-            js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
-            ppm="12000",
-            table=table_name,
-            id_label="id",
-            output_columns=[output_col],
-            extra_info=[lt],
-        )
+        else:
+            print(f"Starting jobs for {output_col}")
+            hrcl_jobs.parallel.ms_sl_extra_info(
+                id_list=id_list,
+                db_path=db_path,
+                run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
+                headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
+                js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
+                ppm="12000",
+                table=table_name,
+                id_label="id",
+                output_columns=[output_col],
+                extra_info=[lt],
+            )
         output_col += "_CP"
         print(f"Starting CP jobs for {output_col}")
-        hrcl_jobs.parallel.ms_sl_extra_info(
-            id_list=id_list,
-            db_path=db_path,
-            run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie_CP,
-            headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
-            js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
-            ppm="12000",
-            table=table_name,
-            id_label="id",
-            extra_info=[lt],
-            output_columns=[output_col],
+        id_list = hrcl_jobs.sqlt.query_columns_for_values(
+            # cur, table_name, id_names=["id"], matches={"DB": ["s22"]}
+            cur,
+            table_name,
+            id_names=["id"],
+            matches={output_col: ["NULL"]},
         )
+        print(id_list)
+        if len(id_list) == 0:
+            print("No jobs to run")
+        else:
+            hrcl_jobs.parallel.ms_sl_extra_info(
+                id_list=id_list,
+                db_path=db_path,
+                run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie_CP,
+                headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
+                js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
+                ppm="12000",
+                table=table_name,
+                id_label="id",
+                extra_info=[lt],
+                output_columns=[output_col],
+            )
     hrcl_jobs.sqlt.table_to_df_csv(db_path, table_name, "s22.csv")
     hrcl_jobs.sqlt.table_to_df_pkl(db_path, table_name, "s22.pkl")
     return
