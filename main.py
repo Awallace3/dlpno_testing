@@ -84,13 +84,12 @@ def main():
     TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3  # Andy's params
     PNO_params = {
         # [TCutPNO, TCutPairs, TCutMKN]
-        # "andy": [1e-8, 1e-5, 1e-3],
         "_orca_loosePNO": [1e-6, 1e-3, 1e-3],
         "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3],
         "_orca_tightPNO": [1e-7, 1e-5, 1e-4],
+        "andy": [1e-8, 1e-5, 1e-3],
     }
 
-    return
     for k, v in PNO_params.items():
         # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
         lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
@@ -116,7 +115,7 @@ def main():
             run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
             headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
             js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
-            ppm="8000",
+            ppm="12000",
             table=table_name,
             id_label="id",
             output_columns=[output_col],
@@ -130,7 +129,7 @@ def main():
             run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie_CP,
             headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
             js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
-            ppm="8000",
+            ppm="12000",
             table=table_name,
             id_label="id",
             extra_info=[lt],
