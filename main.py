@@ -147,7 +147,7 @@ def run_s22_dlpno():
         "_orca_loosePNO": [1e-6, 1e-3, 1e-3],
         "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3],
         "_orca_tightPNO": [1e-7, 1e-5, 1e-4],
-        "andy": [1e-8, 1e-5, 1e-3],
+        # "andy": [1e-8, 1e-5, 1e-3],
     }
 
     for k, v in PNO_params.items():
@@ -263,8 +263,8 @@ def run_3ACX_dlpno():
 
 
 def main():
-    # run_s22_dlpno()
-    run_3ACX_dlpno()
+    run_s22_dlpno()
+    # run_3ACX_dlpno()
     return
 
 
