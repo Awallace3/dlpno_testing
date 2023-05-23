@@ -11,13 +11,14 @@ def main():
     df = pd.read_pickle("s22.pkl")
     print(df.columns.values)
     energy_cols = [
-        "dlpno_ccsd_adz",
+        # "dlpno_ccsd_adz",
         "dlpno_ccsd_adz_orca_loosePNO",
         "dlpno_ccsd_adz_orca_normalPNO",
         "dlpno_ccsd_adz_orca_tightPNO",
     ]
     conv = qcel.constants.conversion_factor("hartree", "kcal/mol")
     df[energy_cols] = df[energy_cols] * conv
+    print(df[energy_cols])
     # Energy cell = [IE Energy, Dimer Energy, Monomer 1 Energy, Monomer 2 Energy]
     energy_cols_ie = [f"{i}_IE" for i in energy_cols]
     for n, i in enumerate(energy_cols):
