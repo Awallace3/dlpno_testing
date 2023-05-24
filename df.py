@@ -24,6 +24,21 @@ def main():
     for n, i in enumerate(energy_cols):
         df[energy_cols_ie[n]] = df[i].apply(lambda x: x[0])
     print(df[['sys_ind', *energy_cols_ie]])
+
+    energy_cols = [
+        # "dlpno_ccsd_adz",
+        "dlpno_ccsd_adz_orca_loosePNO_CP",
+        "dlpno_ccsd_adz_orca_normalPNO_CP",
+        "dlpno_ccsd_adz_orca_tightPNO_CP",
+    ]
+    conv = qcel.constants.conversion_factor("hartree", "kcal/mol")
+    df[energy_cols] = df[energy_cols] * conv
+    print(df[energy_cols])
+    # Energy cell = [IE Energy, Dimer Energy, Monomer 1 Energy, Monomer 2 Energy]
+    energy_cols_ie = [f"{i}_IE" for i in energy_cols]
+    for n, i in enumerate(energy_cols):
+        df[energy_cols_ie[n]] = df[i].apply(lambda x: x[0])
+    print(df[['sys_ind', *energy_cols_ie]])
     return
 
 
