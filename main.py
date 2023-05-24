@@ -42,6 +42,10 @@ def read_3ACX() -> None:
     RAs, RBs, ZAs, ZBs, charges = [], [], [], [], []
     for i, mol in enumerate(geoms):
         mA, mB = mol.fragments_[0], mol.fragments_[1]
+        # ensure protein is always fragment A
+        if len(mA) < len(mB):
+            mA, mB = mB, mA
+        print(len(mA), len(mB))
         RAs.append(mol.geometry[mA, :])
         RBs.append(mol.geometry[mB, :])
         ZAs.append(mol.atomic_numbers[mA])
@@ -55,6 +59,16 @@ def read_3ACX() -> None:
         )
         charges.append(c)
     DB = ["3ACX" for i in range(len(geoms))]
+    t = sorted(zip(names, RAs, RBs, ZAs, ZBs, charges), key=lambda x: int(x[0]))
+    names, RAs, RBs, ZAs, ZBs, charges = [], [], [], [], [], []
+    for i in t:
+        names.append(i[0])
+        RAs.append(i[1])
+        RBs.append(i[2])
+        ZAs.append(i[3])
+        ZBs.append(i[4])
+        charges.append(i[5])
+    print(names)
     sizes = [int(i) for i in names]
     for i in zip(sys_indices, sizes):
         print(i)
@@ -263,8 +277,8 @@ def run_3ACX_dlpno():
 
 
 def main():
-    run_s22_dlpno()
-    # run_3ACX_dlpno()
+    # run_s22_dlpno()
+    run_3ACX_dlpno()
     return
 
 
