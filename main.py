@@ -6,7 +6,7 @@ import pandas as pd
 import data
 import os
 import numpy as np
-import mpi4py
+from mpi4py import MPI
 
 
 def read_s22() -> None:
@@ -100,7 +100,7 @@ def create_s22_table() -> None:
         "dlpno_ccsd_adz_orca_tightPNO_CP": "array",
         "dlpno_ccsd_adz_orca_veryTightPNO_CP": "array",
     }
-    comm = mpi4py.MPI.COMM_WORLD
+    comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     if rank == 0:
         db_path = "db/dlpno.db"
@@ -116,7 +116,7 @@ def create_s22_table() -> None:
         else:
             hrcl_jobs.sqlt.table_add_columns(con, table_name, table_cols)
             print("Skipping Insertions...")
-    mpi4py.MPI.Comm.Barrier(comm)
+    MPI.Comm.Barrier(comm)
     return
 
 
@@ -155,7 +155,7 @@ def create_3ACX_table() -> None:
         else:
             hrcl_jobs.sqlt.table_add_columns(con, table_name, table_cols)
             print("Skipping Insertions...")
-    mpi4py.MPI.Comm.Barrier(comm)
+    MPI.Comm.Barrier(comm)
     return
 
 
