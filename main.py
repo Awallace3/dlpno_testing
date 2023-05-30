@@ -6,6 +6,7 @@ import pandas as pd
 import data
 import os
 import numpy as np
+import mpi4py
 
 
 def read_s22() -> None:
@@ -92,24 +93,30 @@ def create_s22_table() -> None:
         "dlpno_ccsd_adz_orca_loosePNO": "array",
         "dlpno_ccsd_adz_orca_normalPNO": "array",
         "dlpno_ccsd_adz_orca_tightPNO": "array",
+        "dlpno_ccsd_adz_orca_veryTightPNO": "array",
         "dlpno_ccsd_adz_CP": "array",
         "dlpno_ccsd_adz_orca_loosePNO_CP": "array",
         "dlpno_ccsd_adz_orca_normalPNO_CP": "array",
         "dlpno_ccsd_adz_orca_tightPNO_CP": "array",
+        "dlpno_ccsd_adz_orca_veryTightPNO_CP": "array",
     }
-    db_path = "db/dlpno.db"
-    table_name = "s22"
-    table_exists = hrcl_jobs.sqlt.new_table(db_path, table_name, table_cols)
-    con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
-    if table_exists:
-        data = read_s22()
-        insertion = ["DB", "sys_ind", "RA", "ZA", "RB", "ZB", "charges"]
-        for r in zip(*read_s22()):
-            print(r)
-            hrcl_jobs.sqlt.insert_new_row(cur, con, table_name, insertion, r)
-    else:
-        hrcl_jobs.sqlt.table_add_columns(con, table_name, table_cols)
-        print("Skipping Insertions...")
+    comm = mpi4py.MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    if rank == 0:
+        db_path = "db/dlpno.db"
+        table_name = "s22"
+        table_exists = hrcl_jobs.sqlt.new_table(db_path, table_name, table_cols)
+        con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
+        if table_exists:
+            data = read_s22()
+            insertion = ["DB", "sys_ind", "RA", "ZA", "RB", "ZB", "charges"]
+            for r in zip(*read_s22()):
+                print(r)
+                hrcl_jobs.sqlt.insert_new_row(cur, con, table_name, insertion, r)
+        else:
+            hrcl_jobs.sqlt.table_add_columns(con, table_name, table_cols)
+            print("Skipping Insertions...")
+    mpi4py.MPI.Comm.Barrier(comm)
     return
 
 
@@ -127,23 +134,28 @@ def create_3ACX_table() -> None:
         "RB": "array",
         "ZB": "array",
         "charges": "array",
-        "dlpno_ccsd_adz_orca_loosePNO": "array",
-        "dlpno_ccsd_adz_orca_normalPNO": "array",
+        # "dlpno_ccsd_adz_orca_loosePNO": "array",
+        # "dlpno_ccsd_adz_orca_normalPNO": "array",
         "dlpno_ccsd_adz_orca_tightPNO": "array",
+        # "dlpno_ccsd_adz_orca_veryTightPNO": "array",
     }
     db_path = "db/dlpno.db"
     table_name = "t3ACX"
     table_exists = hrcl_jobs.sqlt.new_table(db_path, table_name, table_cols)
     con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
-    data = read_3ACX()
-    if table_exists:
-        insertion = ["DB", "sys_ind", "sizes", "RA", "ZA", "RB", "ZB", "charges"]
-        for r in zip(*read_3ACX()):
-            print(r)
-            hrcl_jobs.sqlt.insert_new_row(cur, con, table_name, insertion, r)
-    else:
-        hrcl_jobs.sqlt.table_add_columns(con, table_name, table_cols)
-        print("Skipping Insertions...")
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    if rank == 0:
+        if table_exists:
+            # data = read_3ACX()
+            insertion = ["DB", "sys_ind", "sizes", "RA", "ZA", "RB", "ZB", "charges"]
+            for r in zip(*read_3ACX()):
+                print(r)
+                hrcl_jobs.sqlt.insert_new_row(cur, con, table_name, insertion, r)
+        else:
+            hrcl_jobs.sqlt.table_add_columns(con, table_name, table_cols)
+            print("Skipping Insertions...")
+    mpi4py.MPI.Comm.Barrier(comm)
     return
 
 
@@ -157,11 +169,11 @@ def run_s22_dlpno():
     con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
     TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3  # Andy's params
     PNO_params = {
-        # [TCutPNO, TCutPairs, TCutMKN]
-        "_orca_loosePNO": [1e-6, 1e-3, 1e-3],
-        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3],
-        "_orca_tightPNO": [1e-7, 1e-5, 1e-4],
-        # "andy": [1e-8, 1e-5, 1e-3],
+        # [TCutPNO, TCutPairs, TCutMKN, TCutDO]
+        "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
+        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
+        "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
+        "_orca_veryTightPNO": [1E-08, 1E-06, 1E-04, 5e-3]
     }
 
     for k, v in PNO_params.items():
@@ -235,11 +247,11 @@ def run_3ACX_dlpno():
     # return
     con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
     PNO_params = {
-        # [TCutPNO, TCutPairs, TCutMKN]
-        "_orca_loosePNO": [1e-6, 1e-3, 1e-3],
-        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3],
-        "_orca_tightPNO": [1e-7, 1e-5, 1e-4],
-        # "andy": [1e-8, 1e-5, 1e-3],
+        # [TCutPNO, TCutPairs, TCutMKN, TCutDO]
+        # "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
+        # "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
+        "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
+        # "_orca_veryTightPNO": [1E-08, 1E-06, 1E-04, 5e-3]
     }
 
     for k, v in PNO_params.items():
@@ -277,8 +289,8 @@ def run_3ACX_dlpno():
 
 
 def main():
-    # run_s22_dlpno()
-    run_3ACX_dlpno()
+    run_s22_dlpno()
+    # run_3ACX_dlpno()
     return
 
 
