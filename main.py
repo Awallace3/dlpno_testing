@@ -99,6 +99,16 @@ def create_s22_table() -> None:
         "dlpno_ccsd_adz_orca_normalPNO_CP": "array",
         "dlpno_ccsd_adz_orca_tightPNO_CP": "array",
         "dlpno_ccsd_adz_orca_veryTightPNO_CP": "array",
+
+        "dlpno_ccsd_t_adz_orca_loosePNO": "array",
+        "dlpno_ccsd_t_adz_orca_normalPNO": "array",
+        "dlpno_ccsd_t_adz_orca_tightPNO": "array",
+        "dlpno_ccsd_t_adz_orca_veryTightPNO": "array",
+        "dlpno_ccsd_t_adz_CP": "array",
+        "dlpno_ccsd_t_adz_orca_loosePNO_CP": "array",
+        "dlpno_ccsd_t_adz_orca_normalPNO_CP": "array",
+        "dlpno_ccsd_t_adz_orca_tightPNO_CP": "array",
+        "dlpno_ccsd_t_adz_orca_veryTightPNO_CP": "array",
     }
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
@@ -178,8 +188,10 @@ def run_s22_dlpno():
 
     for k, v in PNO_params.items():
         # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
-        lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
-        output_col = "dlpno_ccsd_adz"
+        # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        # output_col = "dlpno_ccsd_adz"
+        lt = ["DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        output_col = "dlpno_ccsd_t_adz"
         if k != "andy":
             output_col += k
         id_list = hrcl_jobs.sqlt.query_columns_for_values(
