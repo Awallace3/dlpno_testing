@@ -299,10 +299,14 @@ def run_3ACX_dlpno():
             )
     return
 
+DB_PATH = 'db/dlpno.db'
 
 def main():
-    run_s22_dlpno()
+    # run_s22_dlpno()
+    # hrcl_jobs.sqlt.table_to_df_pkl(DB_PATH, 's22', "s22.pkl")
     # run_3ACX_dlpno()
+    geoms = data.s22.s22_db()
+    print(geoms[12])
     return
 
 
