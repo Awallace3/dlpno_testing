@@ -180,18 +180,18 @@ def run_s22_dlpno():
     TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3  # Andy's params
     PNO_params = {
         # [TCutPNO, TCutPairs, TCutMKN, TCutDO]
-        "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
-        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
-        "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
+        # "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
+        # "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
+        # "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
         "_orca_veryTightPNO": [1E-08, 1E-06, 1E-04, 5e-3]
     }
 
     for k, v in PNO_params.items():
         # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
-        lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
-        output_col = "dlpno_ccsd_adz"
-        # lt = ["DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
-        # output_col = "dlpno_ccsd_t_adz"
+        # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        # output_col = "dlpno_ccsd_adz"
+        lt = ["DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        output_col = "dlpno_ccsd_t_adz"
         if k != "andy":
             output_col += k
         id_list = hrcl_jobs.sqlt.query_columns_for_values(
@@ -302,11 +302,11 @@ def run_3ACX_dlpno():
 DB_PATH = 'db/dlpno.db'
 
 def main():
-    # run_s22_dlpno()
+    run_s22_dlpno()
     # hrcl_jobs.sqlt.table_to_df_pkl(DB_PATH, 's22', "s22.pkl")
     # run_3ACX_dlpno()
-    geoms = data.s22.s22_db()
-    print(geoms[12])
+    # geoms = data.s22.s22_db()
+    # print(geoms[12])
     return
 
 
