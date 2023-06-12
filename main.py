@@ -180,9 +180,9 @@ def run_s22_dlpno(run_calc=False):
     TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3  # Andy's params
     PNO_params = {
         # [TCutPNO, TCutPairs, TCutMKN, TCutDO]
-        "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
-        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
-        "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
+        # "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
+        # "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
+        # "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
         "_orca_veryTightPNO": [1E-08, 1E-06, 1E-04, 5e-3]
     }
 
