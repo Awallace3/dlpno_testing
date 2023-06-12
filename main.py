@@ -169,7 +169,7 @@ def create_3ACX_table() -> None:
     return
 
 
-def run_s22_dlpno():
+def run_s22_dlpno(run_calc=False):
     """
     Runs s22 db jobs with DLPNO-CCSD(T)
     """
@@ -188,10 +188,10 @@ def run_s22_dlpno():
 
     for k, v in PNO_params.items():
         # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
-        lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
-        output_col = "dlpno_ccsd_adz"
-        # lt = ["DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
-        # output_col = "dlpno_ccsd_t_adz"
+        # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        # output_col = "dlpno_ccsd_adz"
+        lt = ["DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        output_col = "dlpno_ccsd_t_adz"
         if k != "andy":
             output_col += k
         id_list = hrcl_jobs.sqlt.query_columns_for_values(
@@ -202,23 +202,24 @@ def run_s22_dlpno():
             matches={output_col: ["NULL"]},
         )
         # id_list = [i for i in id_list if i != 19]
-        print(id_list)
+        print(len(id_list), id_list)
         if len(id_list) == 0:
             print("No jobs to run")
         else:
-            print(f"Starting jobs for {output_col}")
-            hrcl_jobs.parallel.ms_sl_extra_info(
-                id_list=id_list,
-                db_path=db_path,
-                run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
-                headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
-                js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
-                ppm="12000",
-                table=table_name,
-                id_label="id",
-                output_columns=[output_col],
-                extra_info=[lt],
-            )
+            if run_calc:
+                print(f"Starting jobs for {output_col}")
+                hrcl_jobs.parallel.ms_sl_extra_info(
+                    id_list=id_list,
+                    db_path=db_path,
+                    run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie,
+                    headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
+                    js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
+                    ppm="12000",
+                    table=table_name,
+                    id_label="id",
+                    output_columns=[output_col],
+                    extra_info=[lt],
+                )
         output_col += "_CP"
         print(f"Starting CP jobs for {output_col}")
         id_list = hrcl_jobs.sqlt.query_columns_for_values(
@@ -228,22 +229,23 @@ def run_s22_dlpno():
             id_names=["id"],
             matches={output_col: ["NULL"]},
         )
-        print(id_list)
+        print(len(id_list), id_list)
         if len(id_list) == 0:
             print("No jobs to run")
         else:
-            hrcl_jobs.parallel.ms_sl_extra_info(
-                id_list=id_list,
-                db_path=db_path,
-                run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie_CP,
-                headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
-                js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
-                ppm="12000",
-                table=table_name,
-                id_label="id",
-                extra_info=[lt],
-                output_columns=[output_col],
-            )
+            if run_calc:
+                hrcl_jobs.parallel.ms_sl_extra_info(
+                    id_list=id_list,
+                    db_path=db_path,
+                    run_js_job=hrcl_jobs_orca.orca_inps.orca_dlpno_ccsd_ie_CP,
+                    headers_sql=hrcl_jobs_orca.jobspec.dlpno_ie_sql_headers(),
+                    js_obj=hrcl_jobs_orca.jobspec.dlpno_ie_js,
+                    ppm="12000",
+                    table=table_name,
+                    id_label="id",
+                    extra_info=[lt],
+                    output_columns=[output_col],
+                )
     # hrcl_jobs.sqlt.table_to_df_csv(db_path, table_name, "s22.csv")
     # hrcl_jobs.sqlt.table_to_df_pkl(db_path, table_name, "s22.pkl")
     return
@@ -260,10 +262,10 @@ def run_3ACX_dlpno():
     con, cur = hrcl_jobs.sqlt.establish_connection(db_path)
     PNO_params = {
         # [TCutPNO, TCutPairs, TCutMKN, TCutDO]
-        # "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
-        # "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
+        "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
+        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
         "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
-        # "_orca_veryTightPNO": [1E-08, 1E-06, 1E-04, 5e-3]
+        "_orca_veryTightPNO": [1E-08, 1E-06, 1E-04, 5e-3]
     }
 
     for k, v in PNO_params.items():
@@ -302,11 +304,11 @@ def run_3ACX_dlpno():
 DB_PATH = 'db/dlpno.db'
 
 def main():
-    # run_s22_dlpno()
+    run_s22_dlpno()
     # hrcl_jobs.sqlt.table_to_df_pkl(DB_PATH, 's22', "s22.pkl")
     # run_3ACX_dlpno()
-    geoms = data.s22.s22_db()
-    print(geoms[12])
+    # geoms = data.s22.s22_db()
+    # print(geoms[12])
     return
 
 
