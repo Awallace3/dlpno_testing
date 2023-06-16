@@ -188,10 +188,10 @@ def run_s22_dlpno():
 
     for k, v in PNO_params.items():
         # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF", *v]
-        # lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
-        # output_col = "dlpno_ccsd_adz"
-        lt = ["DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
-        output_col = "dlpno_ccsd_t_adz"
+        lt = ["DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        output_col = "dlpno_ccsd_adz"
+        # lt = ["DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF", k.split("_")[-1], *v]
+        # output_col = "dlpno_ccsd_t_adz"
         if k != "andy":
             output_col += k
         id_list = hrcl_jobs.sqlt.query_columns_for_values(
