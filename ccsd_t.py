@@ -183,9 +183,9 @@ def run_s22_dlpno(run_calc=False, selected_type="CCSD"):
     TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3  # Andy's params
     PNO_params = {
         # [TCutPNO, TCutPairs, TCutMKN, TCutDO]
-        # "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
-        # "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
-        # "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
+        "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
+        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
+        "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
         "_orca_veryTightPNO": [1e-08, 1e-06, 1e-04, 5e-3],
     }
 
@@ -195,15 +195,15 @@ def run_s22_dlpno(run_calc=False, selected_type="CCSD"):
             "input_header": "DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF",
             "sub_dir_append": "ccsd",
         },
-        "CCSD(T)": {
-            "out_col": "dlpno_ccsd_t_adz",
-            "input_header": "DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF",
-            "sub_dir_append": "ccsd_t",
-        },
         "CCSD(T0)": {
             "out_col": "dlpno_ccsd_t0_adz",
-            "input_header": "DLPNO-CCSD(T0) cc-pVDZ cc-pVDZ/C TIGHTSCF",
+            "input_header": "DLPNO-CCSD(T) cc-pVDZ cc-pVDZ/C TIGHTSCF",
             "sub_dir_append": "ccsd_t0",
+        },
+        "CCSD(T)": {
+            "out_col": "dlpno_ccsd_t_adz",
+            "input_header": "DLPNO-CCSD(T1) cc-pVDZ cc-pVDZ/C TIGHTSCF",
+            "sub_dir_append": "ccsd_t",
         },
     }
     output_col = run_params[selected_type]["out_col"]
