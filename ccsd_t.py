@@ -110,7 +110,14 @@ def create_s22_table() -> None:
         "dlpno_ccsd_t_adz_orca_tightPNO_CP": "array",
         "dlpno_ccsd_t_adz_orca_veryTightPNO_CP": "array",
 
+        "dlpno_ccsd_t0_adz_orca_loosePNO": "array",
+        "dlpno_ccsd_t0_adz_orca_normalPNO": "array",
+        "dlpno_ccsd_t0_adz_orca_tightPNO": "array",
         "dlpno_ccsd_t0_adz_orca_veryTightPNO": "array",
+        "dlpno_ccsd_t0_adz_CP": "array",
+        "dlpno_ccsd_t0_adz_orca_loosePNO_CP": "array",
+        "dlpno_ccsd_t0_adz_orca_normalPNO_CP": "array",
+        "dlpno_ccsd_t0_adz_orca_tightPNO_CP": "array",
         "dlpno_ccsd_t0_adz_orca_veryTightPNO_CP": "array",
     }
     comm = MPI.COMM_WORLD

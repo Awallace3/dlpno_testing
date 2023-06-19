@@ -335,7 +335,7 @@ DB_PATH = "db/dlpno.db"
 
 def main():
     # create_s22_table()
-    run_s22_dlpno(run_calc=True, selected_type="CCSD(T0)")
+    run_s22_dlpno(run_calc=True, selected_type="CCSD")
     # hrcl_jobs.sqlt.table_to_df_pkl(DB_PATH, 's22', "s22.pkl")
     # run_3ACX_dlpno()
     # geoms = data.s22.s22_db()
