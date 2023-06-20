@@ -190,9 +190,9 @@ def run_s22_dlpno(run_calc=False, selected_type="CCSD"):
     TCutPNO, TCutPairs, TCutMKN = 1e-8, 1e-5, 1e-3  # Andy's params
     PNO_params = {
         # [TCutPNO, TCutPairs, TCutMKN, TCutDO]
-        "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
-        "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
-        "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
+        # "_orca_loosePNO": [1e-6, 1e-3, 1e-3, 2e-2],
+        # "_orca_normalPNO": [3.33e-7, 1e-4, 1e-3, 1e-2],
+        # "_orca_tightPNO": [1e-7, 1e-5, 1e-3, 5e-3],
         "_orca_veryTightPNO": [1e-08, 1e-06, 1e-04, 5e-3],
     }
 
@@ -213,11 +213,11 @@ def run_s22_dlpno(run_calc=False, selected_type="CCSD"):
             "sub_dir_append": "ccsd_t",
         },
     }
-    output_col = run_params[selected_type]["out_col"]
     input_header = run_params[selected_type]["input_header"]
     sub_dir_append = run_params[selected_type]["sub_dir_append"]
 
     for k, v in PNO_params.items():
+        output_col = run_params[selected_type]["out_col"]
         sub_dir = sub_dir_append + "/" + k.split("_")[-1]
         lt = [input_header, sub_dir, *v]
         if k != "andy":
@@ -335,7 +335,7 @@ DB_PATH = "db/dlpno.db"
 
 def main():
     # create_s22_table()
-    run_s22_dlpno(run_calc=True, selected_type="CCSD")
+    run_s22_dlpno(run_calc=True, selected_type="CCSD(T)")
     # hrcl_jobs.sqlt.table_to_df_pkl(DB_PATH, 's22', "s22.pkl")
     # run_3ACX_dlpno()
     # geoms = data.s22.s22_db()
