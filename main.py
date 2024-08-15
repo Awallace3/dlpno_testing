@@ -118,22 +118,24 @@ def plot_dlpno_results(df, limit_to_column_not_nan=None):
     #     df["DLPNO_CCSD_IEIGHT_atz"] + df["DLPNO_CCSD_IEIGHT_atz_CCSD_Disp"]
     # )
 
-    df["DLPNO_CCSD_T_IE adz"] = df["DLPNO_CCSD_T_IE_adz"]
-    df["DLPNO_CCSD_T_IE atz"] = df["DLPNO_CCSD_T_IE_atz"]
-    df["DLPNO_CCSD_T_IE_TIGHT adz"] = df["DLPNO_CCSD_T_IE_TIGHT_adz"]
-    df["DLPNO_CCSD_T_IE_TIGHT atz"] = df["DLPNO_CCSD_T_IE_TIGHT_atz"]
-    df["DLPNO_CCSD_T_IE_DISP adz"] = (
-        df["DLPNO_CCSD_T_IE_adz"] + df["DLPNO_CCSD_T_IE_adz_CCSD_Disp"]
+    df["DLPNO_CCSD_T_IE adz"] = (
+        df["DLPNO_CCSD_T_IE_adz"] - df["DLPNO_CCSD_T_IE_adz_CCSD_Disp"]
     )
-    df["DLPNO_CCSD_T_IE_DISP atz"] = (
-        df["DLPNO_CCSD_T_IE_atz"] + df["DLPNO_CCSD_T_IE_atz_CCSD_Disp"]
+    df["DLPNO_CCSD_T_IE atz"] = (
+        df["DLPNO_CCSD_T_IE_atz"] - df["DLPNO_CCSD_T_IE_atz_CCSD_Disp"]
     )
-    df["DLPNO_CCSD_T_IE_DISP_TIGHT adz"] = (
-        df["DLPNO_CCSD_T_IE_TIGHT_adz"] + df["DLPNO_CCSD_T_IE_TIGHT_adz_CCSD_Disp"]
+    df["DLPNO_CCSD_T_IE_TIGHT adz"] = (
+        df["DLPNO_CCSD_T_IE_TIGHT_adz"] - df["DLPNO_CCSD_T_IE_TIGHT_adz_CCSD_Disp"]
     )
-    df["DLPNO_CCSD_T_IE_DISP_TIGHT atz"] = (
-        df["DLPNO_CCSD_T_IE_TIGHT_atz"] + df["DLPNO_CCSD_T_IE_TIGHT_atz_CCSD_Disp"]
+    df["DLPNO_CCSD_T_IE_TIGHT atz"] = (
+        df["DLPNO_CCSD_T_IE_TIGHT_atz"] - df["DLPNO_CCSD_T_IE_TIGHT_atz_CCSD_Disp"]
     )
+
+    df["DLPNO_CCSD_T_IE_DISP adz"] = df["DLPNO_CCSD_T_IE_adz"]
+    df["DLPNO_CCSD_T_IE_DISP atz"] = df["DLPNO_CCSD_T_IE_atz"]
+    df["DLPNO_CCSD_T_IE_DISP_TIGHT adz"] = df["DLPNO_CCSD_T_IE_TIGHT_adz"]
+    df["DLPNO_CCSD_T_IE_DISP_TIGHT atz"] = df["DLPNO_CCSD_T_IE_TIGHT_atz"]
+
 
     ie_methods = [
         # "DLPNO_CCSD_IE adz",
@@ -165,6 +167,7 @@ def plot_dlpno_results(df, limit_to_column_not_nan=None):
     print(
         df_adz[[
             "ref",
+            "MP2 IE",
             "DLPNO_CCSD_T_IE_DISP",
             "DLPNO_CCSD_T_IE_adz",
             "DLPNO_CCSD_T_IE_adz_CCSD_Disp",
