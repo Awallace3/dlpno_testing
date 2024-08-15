@@ -3,7 +3,7 @@
 - testing with psi4 on NBC10 for dispersion correction
 
 # Objectives - Dispersion correction
-[./plots/dlpno_nbc10_testing_violin.jpg]
+[!./plots/dlpno_nbc10_testing_violin.jpg]
 - [ ] Finish TIGHT
 - [ ] run DLPNO-CCSD(T)/CBS: 
     - does that mean:
