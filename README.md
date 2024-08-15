@@ -29,9 +29,20 @@ performs similarly to TIGHT PNO_CONVERGENCE (at reduced costs).
 ## PNO Extrapolations
 [Neese extrapolation PNO paper](https://pubs.acs.org/doi/10.1021/acs.jctc.0c00344) 
 DLPNO-CCSD(T) energies in Figure 4 in section 3.2. Seems like the Extr.(6/7)
-meaning T_cutPNO = 10^-6 and T_cutPNO = 10^-7 is the best with only a little
+meaning $T_{cutPNO} = 10^{-6}$ and $T_{cutPNO} = 10^{-7}$ is the best with only a little
 improvement from aDZ to aQZ. 
 
 [A recent Herbert paper (2024)](https://pubs.aip.org/aip/jcp/article/161/5/054114/3306675)
-investigates this Neese extrapolation further on much larger systems (S12L, L7,
-PAHs, and graphanes) along with S66.
+investigates this Neese extrapolation and other DLPNO thresholds further on
+much larger systems (S12L, L7, PAHs, and graphanes) along with S66. They show
+that PNO extrapolation seems pretty great for MP2 for over 100 atom systems
+that are van der Waals complexes. Definitively state must use CP for IEs for
+DLPNO (agrees with what we believed). Loose/normal (5/6) extrapolations are
+good except for $\pi$-stacking interactions where normal/tight (6/7) is needed.
+DLPNO-CCSD(T) has large 2-6kcal/mol errors for $\pi$-stacking interactions with
+"tight" PNO. Seems like DLPNO-MP2 for larger systems is a better than
+DLPNO-CCSD(T) if comparing to purely canonical method comparisons. 
+
+They also noted that the canonical extrapolation is bad with augmented basis
+sets because diffuse basis functions can lead to large errors as a function of
+$T_{cutPNO}$.
