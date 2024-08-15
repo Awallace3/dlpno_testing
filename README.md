@@ -24,3 +24,14 @@ performs similarly to TIGHT PNO_CONVERGENCE (at reduced costs).
     3.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvdz" PNO=TIGHT
     4.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvtz" PNO=TIGHT
     5.  "DLPNO-MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvdz" PNO=NORMAL
+
+# DLPNO-CCSD Interaction Energy Notes
+## PNO Extrapolations
+[Neese extrapolation PNO paper](https://pubs.acs.org/doi/10.1021/acs.jctc.0c00344) 
+DLPNO-CCSD(T) energies in Figure 4 in section 3.2. Seems like the Extr.(6/7)
+meaning T_cutPNO = 10^-6 and T_cutPNO = 10^-7 is the best with only a little
+improvement from aDZ to aQZ. 
+
+[A recent Herbert paper (2024)](https://pubs.aip.org/aip/jcp/article/161/5/054114/3306675)
+investigates this Neese extrapolation further on much larger systems (S12L, L7,
+PAHs, and graphanes) along with S66.
