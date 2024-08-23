@@ -1,10 +1,48 @@
-# DLPNO-Testing for S22 
+# DLPNO-Testing
 
+- testing with ORCA vs. psi4 against S22
+- testing with psi4 on NBC10 for dispersion correction
 
-# Notes
-- initial test used 
-`! DLPNO-CCSD cc-pVDZ cc-pVDZ/C RIJCOSX def2/J TIGHTSCF` due to the 
-recommendation [here](https://sites.google.com/site/orcainputlibrary/coupled-cluster)
+## NBC10 Dispersion Corrections
 
-- now trying `! DLPNO-CCSD cc-pVDZ cc-pVDZ/C TIGHTSCF`
+DLPNO-CCSD(T) with aDZ and aTZ are run on NBC10 using hrcl_jobs and qm_db. Error statistics
+against CCSD(T)/CBS are shown in plot below where DLPNO-CCSD(T)/aTZ with normal PNO_CONVERGENCE
+performs similarly to TIGHT PNO_CONVERGENCE (at reduced costs).
 
+![dlpno_nbc10_dispersion_test_img](./plots/dlpno_nbc10_testing_violin.jpg)
+
+### Objectives - Dispersion correction
+
+- [x] DLPNO-CCSD(T)/aug-cc-pVDZ \[PNO=Normal] on NBC10 
+- [x] DLPNO-CCSD(T)/aug-cc-pVTZ \[PNO=Tight]  on NBC10 
+- [x] DLPNO-CCSD(T)/aug-cc-pVTZ \[PNO=Normal] on NBC10 
+- [ ] DLPNO-CCSD(T)/aug-cc-pVTZ \[PNO=Tight]  on NBC10 
+- [ ] run DLPNO-CCSD(T)/CBS:
+  - does that mean...
+    1.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvdz"
+    2.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvtz"
+    3.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvdz" PNO=TIGHT
+    4.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvtz" PNO=TIGHT
+    5.  "DLPNO-MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvdz" PNO=NORMAL
+
+# DLPNO-CCSD Interaction Energy Notes
+## PNO Extrapolations
+[Neese extrapolation PNO paper](https://pubs.acs.org/doi/10.1021/acs.jctc.0c00344) 
+DLPNO-CCSD(T) energies in Figure 4 in section 3.2. Seems like the Extr.(6/7)
+meaning $T_{cutPNO} = 10^{-6}$ and $T_{cutPNO} = 10^{-7}$ is the best with only a little
+improvement from aDZ to aQZ. 
+
+[A recent Herbert paper (2024)](https://pubs.aip.org/aip/jcp/article/161/5/054114/3306675)
+investigates this Neese extrapolation and other DLPNO thresholds further on
+much larger systems (S12L, L7, PAHs, and graphanes) along with S66. They show
+that PNO extrapolation seems pretty great for MP2 for over 100 atom systems
+that are van der Waals complexes. Definitively state must use CP for IEs for
+DLPNO (agrees with what we believed). Loose/normal (5/6) extrapolations are
+good except for $\pi$-stacking interactions where normal/tight (6/7) is needed.
+DLPNO-CCSD(T) has large 2-6kcal/mol errors for $\pi$-stacking interactions with
+"tight" PNO. Seems like DLPNO-MP2 for larger systems is a better than
+DLPNO-CCSD(T) if comparing to purely canonical method comparisons. 
+
+They also noted that the canonical extrapolation is bad with augmented basis
+sets because diffuse basis functions can lead to large errors as a function of
+$T_{cutPNO}$.
