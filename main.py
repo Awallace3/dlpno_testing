@@ -176,7 +176,8 @@ def plot_dlpno_results(df, limit_to_column_not_nan=None):
         for i in ie_methods:
             df_b[f"{i} Error"] = df_b[i] * h2kcalmol - df_b[reference]
             df_b.sort_values(by=f"{i} Error", inplace=True)
-            print(df_b[[f"{i} Error", i, reference]])
+            print(f"{b}")
+            print(df_b[[f"{i} Error", i, "ref"]])
 
 
 
