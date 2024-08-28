@@ -59,3 +59,7 @@ sets because diffuse basis functions can lead to large errors as a function of
 $T_{cutPNO}$.
 
 
+## DLPNO-CCSD(T) Basis Set and System Size
+[compared CCSD(T) and TightPNO](https://pubs.acs.org/doi/full/10.1021/acs.jpca.0c11270)
+[Jan Martin DLPNO Comparison](https://pubs.acs.org/doi/full/10.1021/acs.jctc.0c01106)
+
