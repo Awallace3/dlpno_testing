@@ -26,6 +26,15 @@ def collect_dlpno_df():
         if isinstance(df.iloc[0], list):
             df[col] = df[col].apply(lambda x: np.array(x))
     df.to_pickle("./dfs/los_all.pkl")
+    cur = con.cursor()
+    cur.execute(
+        """SELECT id, "benchmark ref energy", "DB" , system_id , "Geometry" , "monAs" ,"monBs",charges from los.los_all;"""
+    )
+    df = pd.DataFrame(cur.fetchall(), columns=[desc[0] for desc in cur.description])
+    for col in df.columns:
+        if isinstance(df.iloc[0], list):
+            df[col] = df[col].apply(lambda x: np.array(x))
+    df.to_pickle("./dfs/dimers_8298_geometries.pkl")
     return df
 
 
