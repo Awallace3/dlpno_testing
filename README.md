@@ -10,6 +10,12 @@ performs similarly to TIGHT PNO_CONVERGENCE (at reduced costs).
 
 ![dlpno_nbc10_dispersion_test_img](./plots/dlpno_nbc10_testing_violin.jpg)
 
+# Systems
+- add a few larger systems (Jaden), check Ka Un Lao for recent benchmarks
+- Dr. Poole for conformations of tri-peptides (classical conformational energy
+    test sets by Head Gordon)
+- 
+
 ### Objectives - Dispersion correction
 
 - [x] DLPNO-CCSD(T)/aug-cc-pVDZ \[PNO=Normal] on NBC10 
@@ -26,9 +32,9 @@ performs similarly to TIGHT PNO_CONVERGENCE (at reduced costs).
 - [ ] DLPNO-CCSD(T)/cc-pVDZ \[PNO=Tight]  on NBC10 
 - [ ] DLPNO-CCSD(T)/cc-pVTZ \[PNO=Tight]  on NBC10 
 - [ ] DLPNO-CCSD(T)/cc-pVQZ \[PNO=Tight]  on NBC10 
-<!-- - [ ] run DLPNO-CCSD(T)/CBS: -->
-<!--   - does that mean... -->
-<!--     1.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/cc-pvdz" -->
+- [ ] run DLPNO-CCSD(T)/CBS:
+  - does that mean...
+    1.  "MP2/aug-cc-pV[T,Q]Z + D:DLPNO-CCSD(T)/aug-cc-pvdz" (subtract of MP2/aug-cc-pvdz)
 
 # DLPNO-CCSD Interaction Energy Notes
 ## PNO Extrapolations
